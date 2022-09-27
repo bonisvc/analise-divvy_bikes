@@ -1,0 +1,97 @@
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202109-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202110-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202111-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202112-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202201-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202202-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202203-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202204-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202205-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202206-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202207-tripdata`
+UNION DISTINCT
+SELECT * FROM `db-case-data-analytics.divvy_bikes.202208-tripdata`;
+
+--criando uma tabela para armanezar os nomes e ids das estações, de acordo com as coordenadas
+select distinct
+  start_station_name as station_name,
+  start_station_id as station_id,
+  concat(round(start_lat, 4), round(start_lng, 4)) as station_coord
+from
+  `db-case-data-analytics.divvy_bikes.consolidado_tripdata`
+where
+  start_station_name is not null
+union distinct
+  select distinct
+    end_station_name as station_name,
+    end_station_id as station_id,
+    concat(round(end_lat, 4), round(end_lng, 4)) as station_coord
+  from
+    `db-case-data-analytics.divvy_bikes.consolidado_tripdata`
+  where
+    end_station_name is not null
+order by
+  station_id
+;
+
+--substituindo os valores nulos em station_name e station_id pelos nomes e id correspondentes,
+--de acordo com o valor de latitute e longitude arredondado (1° ~ 111,11km, arredondamento na 4° casa (10 metros))
+select
+  rideable_type,
+  started_at,	
+  ended_at,	
+  nullif(start_station_name,
+    (
+      select
+        station_name
+      from
+        `db-case-data-analytics.divvy_bikes.station_coords` as station_coord
+      where
+        station_coord.station_coord = concat(round(trip_data.start_lat, 4), round(trip_data.start_lng, 4))
+    )
+  ),	
+    nullif(start_station_id,
+    (
+      select
+        station_id
+      from
+        `db-case-data-analytics.divvy_bikes.station_coords` as station_coord
+      where
+        station_coord.station_coord = concat(round(trip_data.start_lat, 4), round(trip_data.start_lng, 4))
+    )
+  ),	
+  nullif(end_station_name,
+    (
+      select
+        station_name
+      from
+        `db-case-data-analytics.divvy_bikes.station_coords` as station_coord
+      where
+        station_coord.station_coord = concat(round(trip_data.end_lat, 4), round(trip_data.end_lng, 4))
+    )
+  ),	
+    nullif(end_station_id,
+    (
+      select
+        station_id
+      from
+        `db-case-data-analytics.divvy_bikes.station_coords` as station_coord
+      where
+        station_coord.station_coord = concat(round(trip_data.end_lat, 4), round(trip_data.end_lng, 4))
+    )
+  ),
+  concat(round(trip_data.start_lat, 4), round(trip_data.start_lng, 4)) as start_coord,	
+  concat(round(start_lat, 4), round(start_lng, 4)) as end_coord,
+  member_casual
+from
+  `db-case-data-analytics.divvy_bikes.consolidado_tripdata` as trip_data
