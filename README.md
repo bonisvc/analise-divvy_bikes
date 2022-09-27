@@ -8,13 +8,13 @@ Case proposto como projeto de conclusão no curso de Certificação Profissional
 
 ## Descrição
   Através da base de dados fornecida pela empresa no link https://divvy-tripdata.s3.amazonaws.com/index.html foram seguidas as estapas:
-  > Extração, limpeza e transformação dos dados no BigQuery;
-  > Modelagem e Visualização dos dados com Linguagem R;
-  > Elaboração de relatório em RMarkdown.
+  * Extração, limpeza e transformação dos dados no BigQuery;
+  * Modelagem e Visualização dos dados com Linguagem R;
+  * Elaboração de relatório em RMarkdown.
  
  ## Reprodução
-  > Os dados são protegidos pela licença de utilização disponível no link https://ride.divvybikes.com/data-license-agreement;
-  > Com relação às análise realizadas, caso haja utilização parcial ou total do trabalho realizado, peço por gentileza dar os devidos créditos.
+  * Os dados são protegidos pela licença de utilização disponível no link https://ride.divvybikes.com/data-license-agreement;
+  * Com relação às análise realizadas, caso haja utilização parcial ou total do trabalho realizado, peço por gentileza dar os devidos créditos.
   
  ## Permissão
   O presente trabalho segue as permissões concedidas na licença de utilização disponível no link https://ride.divvybikes.com/data-license-agreement.
